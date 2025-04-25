@@ -1,9 +1,8 @@
-
 import { Item } from "@/types";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, Check } from "lucide-react";
 import { formatDistance } from "date-fns";
 
 interface ItemCardProps {
@@ -35,15 +34,22 @@ const ItemCard = ({ item }: ItemCardProps) => {
               alt={item.title}
               className="object-cover w-full h-full"
             />
-            <Badge 
-              className={`absolute top-2 right-2 ${
-                item.type === 'lost' 
-                  ? 'bg-lost hover:bg-lost/90' 
-                  : 'bg-found hover:bg-found/90'
-              }`}
-            >
-              {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
-            </Badge>
+            <div className="absolute top-2 right-2 flex gap-2">
+              <Badge 
+                className={`${
+                  item.type === 'lost' 
+                    ? 'bg-lost hover:bg-lost/90' 
+                    : 'bg-found hover:bg-found/90'
+                }`}
+              >
+                {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
+              </Badge>
+              {item.claimed && (
+                <Badge variant="outline" className="border-green-500 text-green-500">
+                  <Check className="mr-1 h-3 w-3" /> Claimed
+                </Badge>
+              )}
+            </div>
           </div>
         ) : (
           <div className={`aspect-[4/3] flex items-center justify-center ${

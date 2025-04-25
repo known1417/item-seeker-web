@@ -19,4 +19,7 @@ export interface Item {
   userId: string;
   userName: string;
   contactInfo?: string;
+  claimed: boolean;
+  claimedBy?: string;
+  claimedAt?: string;
 }

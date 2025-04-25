@@ -1,4 +1,3 @@
-
 import { User, Item } from "@/types";
 
 // Mock users data
@@ -28,7 +27,8 @@ export const items: Item[] = [
     createdAt: "2025-04-16T10:30:00Z",
     userId: "1",
     userName: "John Doe",
-    contactInfo: "john@example.com or 555-123-4567"
+    contactInfo: "john@example.com or 555-123-4567",
+    claimed: false
   },
   {
     id: "2",
@@ -41,7 +41,8 @@ export const items: Item[] = [
     createdAt: "2025-04-18T16:45:00Z",
     userId: "2",
     userName: "Jane Smith",
-    contactInfo: "jane@example.com or 555-987-6543"
+    contactInfo: "jane@example.com or 555-987-6543",
+    claimed: false
   },
   {
     id: "3",
@@ -181,4 +182,32 @@ export const searchItems = (query: string): Item[] => {
     item.description.toLowerCase().includes(lowerQuery) || 
     item.location.toLowerCase().includes(lowerQuery)
   );
+};
+
+export const claimItem = (itemId: string, userId: string): Item | undefined => {
+  const itemIndex = items.findIndex(item => item.id === itemId);
+  if (itemIndex === -1) return undefined;
+  
+  items[itemIndex] = {
+    ...items[itemIndex],
+    claimed: true,
+    claimedBy: userId,
+    claimedAt: new Date().toISOString()
+  };
+  
+  return items[itemIndex];
+};
+
+export const unclaimItem = (itemId: string): Item | undefined => {
+  const itemIndex = items.findIndex(item => item.id === itemId);
+  if (itemIndex === -1) return undefined;
+  
+  items[itemIndex] = {
+    ...items[itemIndex],
+    claimed: false,
+    claimedBy: undefined,
+    claimedAt: undefined
+  };
+  
+  return items[itemIndex];
 };

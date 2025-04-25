@@ -1,17 +1,19 @@
 
 import { useParams, Link } from "react-router-dom";
-import { getItemById } from "@/services/mockData";
+import { getItemById, claimItem, unclaimItem } from "@/services/mockData";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Share2, ArrowLeft, Mail, Phone } from "lucide-react";
+import { Calendar, MapPin, Share2, ArrowLeft, Check, X } from "lucide-react";
 import { formatDistance } from "date-fns";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
+import { getCurrentUser } from "@/services/mockData";
 
 const ItemDetail = () => {
   const { id } = useParams<{ id: string }>();
   const item = getItemById(id ?? "");
   const { toast } = useToast();
+  const currentUser = getCurrentUser();
   
   if (!item) {
     return (
@@ -36,15 +38,38 @@ const ItemDetail = () => {
     new Date(),
     { addSuffix: true }
   );
-  
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast({
-      title: "Link copied",
-      description: "The link has been copied to your clipboard",
-    });
+
+  const handleClaim = () => {
+    if (!currentUser) {
+      toast({
+        title: "Authentication required",
+        description: "Please login to claim this item",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const updatedItem = claimItem(item.id, currentUser.id);
+    if (updatedItem) {
+      toast({
+        title: "Item claimed",
+        description: "You have successfully claimed this item",
+      });
+      window.location.reload(); // Refresh to show updated state
+    }
   };
-  
+
+  const handleUnclaim = () => {
+    const updatedItem = unclaimItem(item.id);
+    if (updatedItem) {
+      toast({
+        title: "Item unclaimed",
+        description: "The item has been unclaimed",
+      });
+      window.location.reload(); // Refresh to show updated state
+    }
+  };
+
   return (
     <div className="container py-8">
       <Link to="/" className="inline-flex items-center gap-1 mb-6 hover:underline">
@@ -83,6 +108,11 @@ const ItemDetail = () => {
             >
               {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
             </Badge>
+            {item.claimed && (
+              <Badge variant="outline" className="border-green-500 text-green-500">
+                <Check className="mr-1 h-3 w-3" /> Claimed
+              </Badge>
+            )}
             <p className="text-sm text-muted-foreground">
               Posted by {item.userName} • {timeAgo}
             </p>
@@ -119,9 +149,31 @@ const ItemDetail = () => {
           </Card>
           
           <div className="flex flex-wrap gap-3">
+            {!item.claimed ? (
+              <Button 
+                onClick={handleClaim}
+                className="gap-2"
+              >
+                <Check className="h-4 w-4" /> Claim Item
+              </Button>
+            ) : item.claimedBy === currentUser?.id && (
+              <Button 
+                variant="destructive" 
+                onClick={handleUnclaim}
+                className="gap-2"
+              >
+                <X className="h-4 w-4" /> Unclaim Item
+              </Button>
+            )}
             <Button 
               variant="outline" 
-              onClick={handleShare}
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                toast({
+                  title: "Link copied",
+                  description: "The link has been copied to your clipboard",
+                });
+              }}
               className="gap-2"
             >
               <Share2 size={16} /> Share

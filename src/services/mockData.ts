@@ -55,7 +55,8 @@ export const items: Item[] = [
     createdAt: "2025-04-17T09:15:00Z",
     userId: "1",
     userName: "John Doe",
-    contactInfo: "john@example.com"
+    contactInfo: "john@example.com",
+    claimed: false
   },
   {
     id: "4",
@@ -68,7 +69,8 @@ export const items: Item[] = [
     createdAt: "2025-04-19T14:20:00Z",
     userId: "2",
     userName: "Jane Smith",
-    contactInfo: "Please call 555-987-6543"
+    contactInfo: "Please call 555-987-6543",
+    claimed: false
   },
   {
     id: "5",
@@ -81,7 +83,8 @@ export const items: Item[] = [
     createdAt: "2025-04-20T08:30:00Z",
     userId: "1",
     userName: "John Doe",
-    contactInfo: "Call or text 555-123-4567 anytime"
+    contactInfo: "Call or text 555-123-4567 anytime",
+    claimed: false
   },
   {
     id: "6",
@@ -93,7 +96,8 @@ export const items: Item[] = [
     createdAt: "2025-04-22T10:00:00Z",
     userId: "2",
     userName: "Jane Smith",
-    contactInfo: "Ask for Jane at the cafe or email jane@example.com"
+    contactInfo: "Ask for Jane at the cafe or email jane@example.com",
+    claimed: false
   }
 ];
 

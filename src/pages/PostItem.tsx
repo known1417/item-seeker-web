@@ -45,6 +45,7 @@ const PostItem = () => {
         location,
         contactInfo,
         imageUrl: imageUrl || undefined,
+        claimed: false // Add the claimed property with default value false
       });
 
       toast({
